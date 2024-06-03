@@ -28,7 +28,8 @@ class CGCFinder:
         return gene == 'CAZyme' or (
             gene == 'TC' and self.siggenes in ['tp', 'all', 'tp+tf', 'tp+stp']) or (
             gene == 'TF' and self.siggenes in ['tf', 'all', 'tp+tf', 'tf+stp']) or (
-            gene == 'STP' and self.siggenes in ['stp', 'all', 'tp+stp', 'tf+stp'])
+            gene == 'STP' and self.siggenes in ['stp', 'all', 'tp+stp', 'tf+stp']) or (
+            self.siggenes == 'cazyme' and gene == 'CAZyme')
 
     def increase_cluster_count(self, gene):
         if gene == 'CAZyme':
@@ -55,6 +56,8 @@ class CGCFinder:
             return self.cluster[0] > 0 and self.cluster[1] > 0 and self.cluster[3] > 0
         elif self.siggenes == 'tf+stp':
             return self.cluster[0] > 0 and self.cluster[2] > 0 and self.cluster[3] > 0
+        elif self.siggenes == 'cazyme':
+            return self.cluster[0] > 1
         return False
 
     def find_near(self, contig, index):
@@ -157,7 +160,7 @@ def main():
     parser = argparse.ArgumentParser(description='CAZyme Gene Cluster Finder')
     parser.add_argument('gff_file', help='GFF file containing genome information')
     parser.add_argument('--distance', '-d', type=int, default=2, help='The distance allowed between two signature genes')
-    parser.add_argument('--siggenes', '-s', choices=['all', 'tp', 'tf', 'stp', 'tp+tf', 'tp+stp', 'tf+stp'], default='all', help='Signature genes types required.')
+    parser.add_argument('--siggenes', '-s', choices=['all', 'tp', 'tf', 'stp', 'tp+tf', 'tp+stp', 'tf+stp', 'cazyme'], default='all', help='Signature genes types required.')
     parser.add_argument('--output', '-o', default='output.txt', help='Output file name')
     parser.add_argument('--filtered_output', '-f', default='filtered_output.txt', help='Filtered output file name')
     parser.add_argument('--base_pair', '-b', type=int, default=5000, help='Maximum allowed base pairs between genes in a cluster')
