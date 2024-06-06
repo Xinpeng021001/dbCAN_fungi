@@ -26,10 +26,10 @@ class CGCFinder:
 
     def is_important(self, gene):
         return gene == 'CAZyme' or (
-            gene == 'TC' and self.siggenes in ['tp', 'all', 'tp+tf', 'tp+stp']) or (
-            gene == 'TF' and self.siggenes in ['tf', 'all', 'tp+tf', 'tf+stp']) or (
-            gene == 'STP' and self.siggenes in ['stp', 'all', 'tp+stp', 'tf+stp']) or (
-            self.siggenes == 'cazyme' and gene == 'CAZyme')
+            gene == 'TC' and self.siggenes in ['tp', 'all', 'tp+tf', 'tp+stp','cazyme']) or (
+            gene == 'TF' and self.siggenes in ['tf', 'all', 'tp+tf', 'tf+stp','cazyme']) or (
+            gene == 'STP' and self.siggenes in ['stp', 'all', 'tp+stp', 'tf+stp','cazyme']) or (
+            gene == 'CAZyme' and self.siggenes in ['only_cazyme'])
 
     def increase_cluster_count(self, gene):
         if gene == 'CAZyme':
@@ -57,7 +57,9 @@ class CGCFinder:
         elif self.siggenes == 'tf+stp':
             return self.cluster[0] > 0 and self.cluster[2] > 0 and self.cluster[3] > 0
         elif self.siggenes == 'cazyme':
-            return self.cluster[0] > 1
+            return self.cluster[0] > 1  # At least two CAZymes in the cluster, allow others
+        elif self.siggenes == 'only_cazyme':
+            return self.cluster[0] > 1  # At least two CAZymes in the cluster and only cazymes
         return False
 
     def find_near(self, contig, index):
